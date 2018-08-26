@@ -37,7 +37,7 @@ def myRouteFunction():
 		# cursor = conn.cursor()
 		# cursor.execute("SELECT * FROM my_table")
 		# records = cursor.fetchall()
-		return str(records)
+		return str(auth)
 
 if __name__ == "__main__":
     # Only for debugging while developing
