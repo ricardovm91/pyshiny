@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import env
 import psycopg2
+import pandas
 app = Flask(__name__)
 env.init()
 
