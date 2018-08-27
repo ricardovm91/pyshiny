@@ -16,8 +16,10 @@ First of all, clone the repo, open your terminal, navigate to the **pyshiny** fo
 
 #### 1. Create an image from the Dockerfile
 
-In the Dockerfile you'll find that we're using https://hub.docker.com/r/tiangolo/uwsgi-nginx-flask/ image and we're adding two dependencies: 
+In the Dockerfile you'll find that we're starting from a basic Python image and we're adding dependencies: 
 
+* `Flask` for route management
+* `gunicorn` for our web server
 * `psycopg2` for PostgreSQL
 * `pandas` for data wrangling
 
@@ -31,8 +33,8 @@ Our new container needs to have a volume bind so you can edit the code without d
 
 On your terminal run:
 
-* `docker container run -d -p 80:80 -v /path/to/pyshiny/app:/app --name pyshinycont pyshiny`
-* **OR**  `docker container run -d -p 80:80 -v $(pwd)/app:/app --name pyshinycont pyshiny` (not sure if it works on a Windows machine).
+* `docker container run -d -p 80:5000 -e PORT=5000 -v /path/to/pyshiny/app:/app --name pyshinycont pyshiny`
+* **OR**  `docker container run -d -p 80:5000 -e PORT=5000 -v $(pwd)/app:/app --name pyshinycont pyshiny` (not sure if it works on a Windows machine).
 * After creating your container go to your browser and type `localhost`. You should see a message saying **"Still Alive!"**. You're container is now running on port 80.
 
 #### 3. Configure the env.py file.
@@ -51,4 +53,30 @@ Going back to the env.py file...
 You're all set now. Go to Postman (or similar), send a GET or POST request to `localhost/myroute` with the token on the header and you should see **"Allow"** on your screen.
 
 You now have a running REST server that you can use to add Python functionality to your Shiny App. We hope to keep extending the repo with more stuff in the near future.
+
+## Deploying on Heroku
+
+Create a Heroku account and install the Heroku CLI ([Steps here](https://devcenter.heroku.com/articles/heroku-cli)).
+
+Open your terminal and run:
+
+```
+heroku login
+heroku container:login
+```
+Then create a new Heroku app and copy the name of the app.
+
+`heroku create`
+
+Push your Docker container to heroku.
+`heroku container:push web --app {Your-App-Name}`
+
+Release the container.
+`heroku container:release web --app {Your-App-Name}`
+
+Add Dynos to your Heroku app.
+`heroku ps:scale web=1 --app {Your-App-Name}`
+
+Test your app. You're all set!
+`heroku open`
 
