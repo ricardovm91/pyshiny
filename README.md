@@ -78,3 +78,7 @@ Add Dynos to your Heroku app.
 Test your app. You're all set!
 `heroku open`
 
+## Additional links
+
+[Docker cheatsheet](https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3)
+
