@@ -1,22 +1,22 @@
-FROM python:3.7-slim
+# pull official base image
+FROM python:3.6-slim
 
-# Upgrade pip
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
 RUN pip install --upgrade pip
+COPY ./requirements.txt .
 
-## make a local directory
-RUN mkdir /app
+RUN \
+ apt-get -y update && \
+ apt-get -y install libpq-dev gcc
 
-# set "app" as the working directory from which CMD, RUN, ADD references
-WORKDIR /app
+RUN pip install -r requirements.txt
 
-# now copy all the files in this directory to /code
-COPY ./app /app
-
-# pip install the local requirements.txt
-RUN pip install Flask
-RUN pip install gunicorn
-RUN pip install psycopg2
-RUN pip install pandas
-
-# Define our command to be run when launching the container
-CMD gunicorn app:app --bind 0.0.0.0:$PORT --reload
+# copy project
+COPY . .

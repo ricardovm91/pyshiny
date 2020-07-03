@@ -14,22 +14,9 @@ To run this as smoothly as possible, you'll need Docker.
 
 First of all, clone the repo, open your terminal, navigate to the **pyshiny** folder, and follow the next steps.
 
-#### 1. Create an image from the Dockerfile
+#### 1. Configure the env.py file.
 
-In the Dockerfile you'll find that we're starting from a basic Python image and we're adding dependencies: 
-
-* `Flask` for route management
-* `gunicorn` for our web server
-* `psycopg2` for PostgreSQL
-* `pandas` for data wrangling
-
-You may add or remove dependencies as you wish.
-
-To create a new image run: `docker build -t pyshiny .` .
-
-#### 2. Configure the env.py file.
-
-This server is meant to have only server-to-server communication over **https**. In order to authenticate itself, the requesting server (a Shiny app in this case) needs to send a **parameter in the header named token** with a key that the Pyshiny server will validate. If you want to read abour how to send this data on the header, you can find that information [here](https://rdrr.io/cran/httr/man/add_headers.html).
+This server is meant to have only server-to-server communication over **https** when deployed in production. In order to authenticate itself, the requesting server (a Shiny app in this case) needs to send a **parameter in the header named token** with a key that the Pyshiny server will validate. If you want to read abour how to send this data on the header on R, you can find that information [here](https://rdrr.io/cran/httr/man/add_headers.html).
 
 Going back to the env.py file...
 
@@ -37,20 +24,21 @@ Going back to the env.py file...
 2. Create a secure token and fill the `token = ""` line with your new key. You can easily create one [here](https://randomkeygen.com/).
 3. If you're using a database you can add the DB credentials to your file.
 4. Feel free to add any other settings your server needs.
-5. Create the container with a volume bind by running on the terminal:
-* `docker container run -d -p 80:5000 -e PORT=5000 -v /path/to/pyshiny/app:/app --name pyshinycont pyshiny`
-* **OR**  `docker container run -d -p 80:5000 -e PORT=5000 -v $(pwd)/app:/app --name pyshinycont pyshiny` (not sure if it works on a Windows machine).
-6. After creating your container go to your browser and type `localhost`. You should see a message saying **"Still Alive!"**. You're container is now running on port 80.
 
-You're all set now. Go to Postman (or similar), send a GET or POST request to `localhost/myroute` with the token on the header and you should see **"Allow"** on your screen.
+#### 2. Build and run the docker container
 
-You now have a running REST server that you can use to add Python functionality to your Shiny App. We hope to keep extending the repo with more stuff in the near future.
+You may add or remove dependencies as you wish by modifying the *requirements.txt* file.
 
-#### 3. Starting and stoping your server.
-This is useful if it is your first time using Docker.
+* Run `docker-compose build` to create the container.
+* Run `docker-compose up -d` to activate the container (It will be kept alive since we're running it detached).
+* Run `docker-compose stop` to deactivate the container.
 
-1. Stop the container by running on the terminal `docker stop pyshinycont`.
-2. Start your container again by running `docker start pyshinycont -i` if you want to see the server's log or `docker start pyshinycont` if you want it to run on the background.
+#### 3. Enjoy
+
+1. Go to your browser and type `localhost`. You should see a message saying **"Still Alive!"**. You're container is now running on port 80.
+2. Go to Postman (or similar), send a GET or POST request to `localhost/myroute` with the token on the header and you should see **"Allow"** on your screen.
+
+You now have a running REST server that you can use to add Python functionality to your Shiny App.
 
 ## Deploying on Heroku
 
@@ -81,4 +69,5 @@ Test your app. You're all set!
 ## Additional links
 
 [Docker cheatsheet](https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3)
+[Docker Compose cheatsheet](https://devhints.io/docker-compose)
 
