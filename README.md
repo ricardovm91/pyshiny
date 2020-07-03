@@ -44,7 +44,24 @@ You now have a running REST server that you can use to add Python functionality 
 
 Create a Heroku account and install the Heroku CLI ([Steps here](https://devcenter.heroku.com/articles/heroku-cli)).
 
-Open your terminal and run:
+Start by adding these lines to the end of the Dockerfile:
+```
+# Define our command to be run when launching the container
+CMD gunicorn app:app --bind 0.0.0.0:$PORT --reload
+```
+
+Then go to the file *docker-compose.override.yml* and replace the content for this config:
+```
+version: '3.7'
+
+services:
+  web:
+    command: gunicorn app:app --bind 0.0.0.0:$PORT --reload
+    ports:
+      - $PORT:$PORT
+```
+
+Then open your terminal and run:
 
 ```
 heroku login

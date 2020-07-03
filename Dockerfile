@@ -19,4 +19,4 @@ RUN \
 RUN pip install -r requirements.txt
 
 # copy project
-COPY . .
+COPY ./app .
