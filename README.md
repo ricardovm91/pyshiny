@@ -86,5 +86,6 @@ Test your app. You're all set!
 ## Additional links
 
 [Docker cheatsheet](https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3)
+
 [Docker Compose cheatsheet](https://devhints.io/docker-compose)
 
